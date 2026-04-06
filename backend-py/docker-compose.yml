@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: nodetrace_db
+    restart: always
+    environment:
+      POSTGRES_USER: nodetrace
+      POSTGRES_PASSWORD: nodetrace_password
+      POSTGRES_DB: nodetrace_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - nodetrace_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    container_name: nodetrace_adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nodetrace_backend
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+
+volumes:
+  nodetrace_data:

@@ -1,0 +1,32 @@
+# --- FastAPI core ---
+fastapi
+uvicorn[standard]
+
+# --- Database ---
+SQLAlchemy
+psycopg2-binary
+
+# --- Environment variables ---
+python-decouple
+
+# --- Password hashing ---
+passlib[bcrypt]
+
+# --- JWT Authentication ---
+PyJWT
+
+# --- Rate limiting ---
+slowapi
+
+# --- CORS ---
+starlette
+
+# --- Utilities ---
+python-dotenv
+
+# --- Testing ---
+pytest
+httpx
+
+# --- Cryptography compatibility pin (passlib dependency workaround) ---
+bcrypt==4.0.1
