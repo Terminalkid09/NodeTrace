@@ -24,9 +24,6 @@ class DeviceOut(BaseModel):
     device_id: str
     hostname: str
     os: str
-    os_version: str
-    cpu_model: str
-    total_ram: int
     mac_address: str
     last_seen: datetime
     status: str # on o off

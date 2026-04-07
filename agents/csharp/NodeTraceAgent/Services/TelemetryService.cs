@@ -12,7 +12,8 @@ namespace NodeTraceAgent.Services
 
         public TelemetryService()
         {
-            // TODO: PerformanceCounter is Windows-only, add cross-platform alternative
+            // Nota: PerformanceCounter è Windows-only. Questo agente è ottimizzato per Windows.
+            // TODO: PerformanceCounter è Windows-only, add cross-platform alternative
             _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             _ramCounter = new PerformanceCounter("Memory", "Available MBytes");
         }

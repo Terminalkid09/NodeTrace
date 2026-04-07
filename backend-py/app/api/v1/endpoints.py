@@ -283,7 +283,7 @@ def get_devices(request: Request, db: Session = Depends(get_db), user=Depends(ge
 
     output = []
     for d in devices:
-        is_online = (now - d.last_seen) < timedelta(seconds=30)
+        is_online = (now - d.last_seen) < timedelta(seconds=120)
         output.append(DeviceOut(
             device_id=d.device_id,
             hostname=d.hostname,
@@ -308,7 +308,7 @@ def get_device_detail(device_id: str, request: Request, db: Session = Depends(ge
         raise HTTPException(status_code=404, detail="device_not_found")
 
     now = datetime.utcnow()
-    is_online = (now - device.last_seen) < timedelta(seconds=30)
+    is_online = (now - device.last_seen) < timedelta(seconds=120)
 
     latest = (
         db.query(Telemetry)
@@ -432,7 +432,7 @@ def get_status(request: Request, db: Session = Depends(get_db), user=Depends(get
     offline = 0
 
     for d in devices:
-        if (now - d.last_seen) < timedelta(seconds=30):
+        if (now - d.last_seen) < timedelta(seconds=120):
             online += 1
         else:
             offline += 1

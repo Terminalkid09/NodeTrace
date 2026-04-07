@@ -37,7 +37,9 @@ std::string Agent::register_device() {
         {"hostname", config.device_name},
         {"os", system_info.os},        {"os_version", system_info.os_version},
         {"cpu_model", system_info.cpu_model},
-        {"total_ram", system_info.ram_total},        {"mac_address", "unknown"}, // TODO
+        {"total_ram", system_info.ram_total},
+        // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
+        {"mac_address", "unknown"}, // TODO
         {"enroll_key", config.enroll_key}
     };
 
@@ -54,15 +56,25 @@ std::string Agent::register_device() {
 
 void Agent::send_telemetry(const std::string& device_id) {
     // Collect telemetry data
+    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
     float cpu_usage = 0.0; // TODO: implement CPU usage
+    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
     float ram_usage = 0.0; // TODO: calculate RAM usage
+    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
     std::string ip_local = "127.0.0.1"; // TODO
+    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
     std::string ip_public = "unknown"; // TODO
+    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
     int disk_free = 0; // TODO
+    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
     int disk_total = 0; // TODO
+    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
     int network_sent = 0; // TODO
+    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
     int network_received = 0; // TODO
+    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
     int active_connections = 0; // TODO
+    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
     nlohmann::json processes = nlohmann::json::array(); // TODO
 
     nlohmann::json payload = {
@@ -83,6 +95,7 @@ void Agent::send_telemetry(const std::string& device_id) {
 
     HttpClient http;
     std::string response = http.post(config.update_url, payload.dump());
+    (void)response;
     Logger::info("Telemetry sent");
 }
 
