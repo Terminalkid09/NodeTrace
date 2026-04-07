@@ -36,7 +36,7 @@ A comprehensive multi-agent device monitoring platform that collects detailed te
 - **agents/java/**: Maven-based agent for cross-platform with OSHI library
 - **agents/python/**: Python agent with psutil for system monitoring
 - **agents/cpp/**: C++ agent with CMake build system
-- **frontend/**: (Planned) Web dashboard for visualization
+- **frontend/**: Web dashboard for device monitoring and visualization
 
 ## Quick Start
 
@@ -86,6 +86,7 @@ java -cp target/classes com.nodetrace.Agent
 ```
 
 #### C++ Agent (Cross-platform)
+- placeholder
 ```bash
 cd agents/cpp
 mkdir build && cd build
