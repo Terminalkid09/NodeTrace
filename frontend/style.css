@@ -1,0 +1,382 @@
+/* --------------------------------------
+   NodeTrace Dashboard - Professional Theme
+   Versione unificata con tutte le migliorie
+----------------------------------------- */
+
+/* Import font moderno (opzionale ma elegante) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap');
+
+:root {
+    /* Light mode (default) */
+    --bg-page: #f4f6fa;
+    --bg-card: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --border-light: #e2e8f0;
+    --accent-online: #10b981;
+    --accent-offline: #ef4444;
+    --accent-alert: #f59e0b;
+    --accent-info: #3b82f6;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+    --transition: all 0.2s ease;
+}
+
+/* Dark mode automatico (rispetta le preferenze di sistema) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-page: #0f172a;
+        --bg-card: #1e293b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --text-muted: #94a3b8;
+        --border-light: #334155;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+    }
+}
+
+/* Reset base e tipografia */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg-page);
+    color: var(--text-primary);
+    line-height: 1.5;
+    font-weight: 400;
+    font-size: 0.9375rem;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+header {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-light);
+    padding: 1.75rem 2rem;
+    text-align: center;
+    backdrop-filter: blur(2px);
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+header p {
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+}
+
+/* Layout principale */
+main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Sezioni */
+section {
+    margin-bottom: 2.5rem;
+    animation: fadeInUp 0.25s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h2 {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    padding-left: 0.75rem;
+    border-left: 3px solid var(--accent-online);
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+}
+
+/* Cards (stato generale) */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.card h3 {
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+/* Tabella dispositivi */
+#devices table {
+    width: 100%;
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#devices th,
+#devices td {
+    padding: 0.875rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-light);
+}
+
+#devices th {
+    background: color-mix(in srgb, var(--bg-card) 95%, var(--text-primary) 5%);
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+#devices tr:last-child td {
+    border-bottom: none;
+}
+
+#devices tbody tr {
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+#devices tbody tr:hover td {
+    background: color-mix(in srgb, var(--accent-info) 8%, transparent);
+}
+
+.selected-row td {
+    background: color-mix(in srgb, var(--accent-info) 15%, transparent) !important;
+    border-left: 3px solid var(--accent-info);
+}
+
+/* Badge di stato (richiede modifica minima nel JS per aggiungere span.status-badge) */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.status-badge::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-badge.online::before {
+    background: var(--accent-online);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-online) 30%, transparent);
+}
+
+.status-badge.offline::before {
+    background: var(--accent-offline);
+}
+
+/* Sezione alert */
+#alerts {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+}
+
+#alert-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.alert-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.875rem;
+    background: var(--bg-page);
+    border-left: 4px solid;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+
+.alert-item:hover {
+    transform: translateX(3px);
+}
+
+.alert-critical {
+    border-left-color: #dc2626;
+    background: color-mix(in srgb, #dc2626 8%, var(--bg-card));
+}
+
+.alert-warning {
+    border-left-color: #f59e0b;
+    background: color-mix(in srgb, #f59e0b 8%, var(--bg-card));
+}
+
+.alert-info {
+    border-left-color: #3b82f6;
+    background: color-mix(in srgb, #3b82f6 8%, var(--bg-card));
+}
+
+.alert-item::before {
+    content: "⚠️";
+    font-size: 1.1rem;
+}
+
+.alert-critical::before {
+    content: "⛔";
+}
+
+.alert-info::before {
+    content: "ℹ️";
+}
+
+/* Dettaglio device selezionato */
+#device-info {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+}
+
+#device-details p {
+    margin: 0.5rem 0;
+    display: flex;
+    gap: 0.75rem;
+    border-bottom: 1px dashed var(--border-light);
+    padding-bottom: 0.5rem;
+}
+
+#device-details p strong {
+    min-width: 100px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Grafici */
+#charts {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+canvas {
+    max-width: 100%;
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-light);
+    padding: 1rem;
+    height: auto !important;
+    box-sizing: border-box;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    main {
+        padding: 1rem;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .card p {
+        font-size: 1.8rem;
+    }
+
+    #devices th,
+    #devices td {
+        padding: 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    #device-details p {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    #device-details p strong {
+        min-width: auto;
+    }
+}
+
+/* Accessibilità e dettagli */
+:focus-visible {
+    outline: 2px solid var(--accent-info);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+/* Scrollbar personalizzata (sottile e moderna) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-page);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--text-muted);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}

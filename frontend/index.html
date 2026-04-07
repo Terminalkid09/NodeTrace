@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeTrace Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>NodeTrace Dashboard</h1>
+        <p>Real-time monitoring of devices</p>
+    </header>
+
+    <main>
+
+        <!-- generale -->
+        <section id="overview">
+            <h2>General Status</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Online Devices</h3>
+                    <p id="online-count">--</p>
+                </div>
+                <div class="card">
+                    <h3>Offline Devices</h3>
+                    <p id="offline-count">--</p>
+                </div>
+                <div class="card">
+                    <h3>Active Alerts</h3>
+                    <p id="alert-count">--</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabella dispositivi -->
+        <section id="devices">
+            <h2>Devices</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Last Heartbeat</th>
+                    </tr>
+                </thead>
+                <tbody id="device-table">
+                    <!-- Riempito da dashboard.js -->
+                </tbody>
+            </table>
+        </section>
+
+        <section id="alerts">
+            <h2>Alert attivi</h2>
+                <div id="alert-list">
+                    <p>Nessun alert attivo</p>
+                </div>
+        </section>
+
+        <section id="device-info">
+            <h2>Device selezionato</h2>
+                <div id="device-details">
+                    <p>Nessun device selezionato</p>
+                </div>
+        </section>
+
+        <!-- Grafici -->
+        <section id="charts">
+            <h2>Telemetria</h2>
+            <canvas id="cpuChart"></canvas>
+            <canvas id="ramChart"></canvas>
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
