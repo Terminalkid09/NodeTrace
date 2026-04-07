@@ -88,7 +88,7 @@ app/
 1. Clone repository
 
 ```bash
-git clone https://github.com/<your-username>/NodeTrace.git
+git clone https://github.com/Terminalkid09/NodeTrace/tree/main/backend-py
 cd NodeTrace/backend-py
 ```
 

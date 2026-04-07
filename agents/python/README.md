@@ -21,7 +21,7 @@ A cross-platform Python agent for the NodeTrace monitoring system. Collects comp
 
 ### From Source
 ```bash
-git clone https://github.com/yourusername/NodeTrace.git
+git clone https://github.com/Terminalkid09/NodeTrace/tree/main/agents/python
 cd NodeTrace/agents/python
 pip install -r requirements.txt
 ```
@@ -218,12 +218,3 @@ Then:
 sudo systemctl enable nodetrace-agent
 sudo systemctl start nodetrace-agent
 ```
-
-## Troubleshooting
-
-- Verify Python version and dependencies
-- Check backend URL accessibility
-- Ensure `enroll_key` matches backend
-- Review console output for errors
-- Check token persistence files</content>
-<parameter name="filePath">c:\Users\ilysm\Desktop\GitHub\NodeTrace\agents\python\README.md

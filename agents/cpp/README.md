@@ -39,7 +39,7 @@ vcpkg install curl nlohmann-json
 
 ### From Source
 ```bash
-git clone https://github.com/yourusername/NodeTrace.git
+git clone https://github.com/Terminalkid09/NodeTrace/tree/main/agents/cpp
 cd NodeTrace/agents/cpp
 mkdir build && cd build
 cmake ..
@@ -256,12 +256,3 @@ MIT License
 
 ### macOS
 - Similar to Linux, with potential modifications needed
-
-## Troubleshooting
-
-- Ensure CMake and compiler are installed
-- Check libcurl and JSON library paths
-- Verify backend connectivity
-- Check `enroll_key` configuration
-- Review build output for errors</content>
-<parameter name="filePath">c:\Users\ilysm\Desktop\GitHub\NodeTrace\agents\cpp\README.md

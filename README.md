@@ -48,7 +48,7 @@ A comprehensive multi-agent device monitoring platform that collects detailed te
 ### Backend Setup with Docker
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/NodeTrace.git
+   git clone https://github.com/Terminalkid09/NodeTrace/
    cd NodeTrace
    ```
 
@@ -155,4 +155,4 @@ python -m pytest tests/
 
 ## License
 
-MIT License - see LICENSE file for details
+**Terminalkid09**

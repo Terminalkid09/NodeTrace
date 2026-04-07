@@ -20,7 +20,7 @@ A cross-platform .NET agent for the NodeTrace monitoring system. Collects compre
 
 ### From Source
 ```bash
-git clone https://github.com/yourusername/NodeTrace.git
+git clone https://github.com/Terminalkid09/NodeTrace/tree/main/agents/csharp
 cd NodeTrace/agents/csharp/NodeTraceAgent
 dotnet restore
 ```
@@ -199,10 +199,3 @@ MIT License
 - `Models/`: Data models
 - `Utils/`: Utilities and helpers
 
-## Troubleshooting
-
-- Ensure backend is running and accessible
-- Check `enroll_key` matches backend configuration
-- Verify firewall allows outbound HTTP connections
-- Check logs for detailed error messages</content>
-<parameter name="filePath">c:\Users\ilysm\Desktop\GitHub\NodeTrace\agents\csharp\README.md

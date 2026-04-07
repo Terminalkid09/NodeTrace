@@ -22,7 +22,7 @@ A cross-platform Java agent for the NodeTrace monitoring system. Uses the OSHI (
 
 ### From Source
 ```bash
-git clone https://github.com/yourusername/NodeTrace.git
+git clone https://github.com/Terminalkid09/NodeTrace/tree/main/agents/java
 cd NodeTrace/agents/java
 mvn clean install
 ```
@@ -213,11 +213,3 @@ MIT License
 - OSHI: Hardware monitoring
 - Gson: JSON processing
 - OkHttp: HTTP client
-
-## Troubleshooting
-
-- Ensure Java and Maven are installed
-- Check backend connectivity
-- Verify `enroll_key` configuration
-- Review logs for errors</content>
-<parameter name="filePath">c:\Users\ilysm\Desktop\GitHub\NodeTrace\agents\java\README.md
