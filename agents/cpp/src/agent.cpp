@@ -1,6 +1,7 @@
 #include "agent.hpp"
 #include "logger.hpp"
 #include "http_client.hpp"
+#include "telemetry_data.hpp"
 #include <nlohmann/json.hpp>
 #include <thread>
 #include <chrono>
@@ -33,13 +34,15 @@ void Agent::start() {
 }
 
 std::string Agent::register_device() {
+    NetworkData net = TelemetryService::collectNetworkInfo();
+    
     nlohmann::json payload = {
         {"hostname", config.device_name},
-        {"os", system_info.os},        {"os_version", system_info.os_version},
+        {"os", system_info.os},        
+        {"os_version", system_info.os_version},
         {"cpu_model", system_info.cpu_model},
         {"total_ram", system_info.ram_total},
-        // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
-        {"mac_address", "unknown"}, // TODO
+        {"mac_address", net.mac_address},
         {"enroll_key", config.enroll_key}
     };
 
@@ -56,41 +59,27 @@ std::string Agent::register_device() {
 
 void Agent::send_telemetry(const std::string& device_id) {
     // Collect telemetry data
-    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
-    float cpu_usage = 0.0; // TODO: implement CPU usage
-    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
-    float ram_usage = 0.0; // TODO: calculate RAM usage
-    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
-    std::string ip_local = "127.0.0.1"; // TODO
-    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
-    std::string ip_public = "unknown"; // TODO
-    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
-    int disk_free = 0; // TODO
-    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
-    int disk_total = 0; // TODO
-    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
-    int network_sent = 0; // TODO
-    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
-    int network_received = 0; // TODO
-    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
-    int active_connections = 0; // TODO
-    // TODO: implementazione futura — attualmente l'agente invia valori placeholder.
-    nlohmann::json processes = nlohmann::json::array(); // TODO
+    TelemetryData telemetry = TelemetryService::collect();
+
+    nlohmann::json processes = nlohmann::json::array();
+    for (const auto& process : telemetry.processes) {
+        processes.push_back(process);
+    }
 
     nlohmann::json payload = {
         {"device_id", device_id},
-        {"cpu_usage", cpu_usage},
-        {"ram_usage", ram_usage},
-        {"ip_local", ip_local},
-        {"ip_public", ip_public},
+        {"cpu_usage", telemetry.cpu_usage},
+        {"ram_usage", telemetry.ram_usage},
+        {"ip_local", telemetry.ip_local},
+        {"ip_public", telemetry.ip_public},
         {"geo_country", nullptr},
         {"geo_city", nullptr},
         {"processes", processes},
-        {"disk_free", disk_free},
-        {"disk_total", disk_total},
-        {"network_sent", network_sent},
-        {"network_received", network_received},
-        {"active_connections", active_connections}
+        {"disk_free", telemetry.disk_free},
+        {"disk_total", telemetry.disk_total},
+        {"network_sent", telemetry.network_sent},
+        {"network_received", telemetry.network_received},
+        {"active_connections", telemetry.active_connections}
     };
 
     HttpClient http;
