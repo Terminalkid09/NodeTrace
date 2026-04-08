@@ -95,12 +95,15 @@ public class Agent {
 
         try {
             Response response = http.newCall(request).execute();
-            String responseBody = response.body().string();
+            if (response.body() != null) {
+                String responseBody = response.body().string();
+                JsonObject json = gson.fromJson(responseBody, JsonObject.class);
+                return json;
+            }
+            Logger.error("Empty response body");
+            return null;
 
-            JsonObject json = gson.fromJson(responseBody, JsonObject.class);
-            return json;
-
-        } catch (Exception e) {
+        } catch (java.io.IOException e) {
             Logger.error("Registration failed: " + e.getMessage());
             System.exit(1);
             return null;
@@ -125,8 +128,7 @@ public class Agent {
         try {
             retryPolicy.execute(() -> {
 
-                JsonObject telemetry = telemetryService.collectTelemetry();
-                JsonObject network = networkService.collectNetworkInfo();
+                JsonObject telemetry = telemetryService.collectTelemetry(networkService);
 
                 JsonObject payload = new JsonObject();
                 payload.addProperty("device_id", deviceId);
