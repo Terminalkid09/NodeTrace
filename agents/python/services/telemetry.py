@@ -29,7 +29,7 @@ class TelemetryService:
             "cpu_usage": cpu_usage,
             "ram_usage": ram_usage,
             "ip_local": self._get_local_ip(),
-            "ip_public": "unknown",  # TODO
+            "ip_public": self._get_public_ip(),
             "geo_country": None,
             "geo_city": None,
             "processes": processes,
@@ -49,6 +49,14 @@ class TelemetryService:
             return ip
         except:
             return "127.0.0.1"
+
+    def _get_public_ip(self):
+        try:
+            import requests
+            response = requests.get("https://api.ipify.org", timeout=5)
+            return response.text if response.status_code == 200 else "unknown"
+        except:
+            return "unknown"
 
     def get_system_info(self):
         return {
