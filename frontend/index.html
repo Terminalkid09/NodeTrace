@@ -53,24 +53,83 @@
         </section>
 
         <section id="alerts">
-            <h2>Alert attivi</h2>
+            <h2>Active Alerts</h2>
                 <div id="alert-list">
-                    <p>Nessun alert attivo</p>
+                    <p>No active alerts</p>
                 </div>
         </section>
 
         <section id="device-info">
-            <h2>Device selezionato</h2>
+            <h2>Selected Device</h2>
                 <div id="device-details">
-                    <p>Nessun device selezionato</p>
+                    <p>No device selected</p>
                 </div>
         </section>
 
-        <!-- Grafici -->
+        <!-- Charts -->
         <section id="charts">
-            <h2>Telemetria</h2>
-            <canvas id="cpuChart"></canvas>
-            <canvas id="ramChart"></canvas>
+            <h2>Telemetry Charts</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <canvas id="cpuChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="ramChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="diskChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="networkChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Telemetry -->
+        <section id="telemetry">
+            <h2>Real-time Telemetry</h2>
+            <div class="telemetry-grid" id="telemetry-data">
+                <div class="telemetry-card">
+                    <h3>IP Local</h3>
+                    <p id="ip-local">--</p>
+                </div>
+                <div class="telemetry-card">
+                    <h3>IP Public</h3>
+                    <p id="ip-public">--</p>
+                </div>
+                <div class="telemetry-card">
+                    <h3>MAC Address</h3>
+                    <p id="mac-address">--</p>
+                </div>
+                <div class="telemetry-card">
+                    <h3>Disk Free (MB)</h3>
+                    <p id="disk-free">--</p>
+                </div>
+                <div class="telemetry-card">
+                    <h3>Disk Total (MB)</h3>
+                    <p id="disk-total">--</p>
+                </div>
+                <div class="telemetry-card">
+                    <h3>Network Sent (Bytes)</h3>
+                    <p id="network-sent">--</p>
+                </div>
+                <div class="telemetry-card">
+                    <h3>Network Received (Bytes)</h3>
+                    <p id="network-received">--</p>
+                </div>
+                <div class="telemetry-card">
+                    <h3>Active Connections</h3>
+                    <p id="active-connections">--</p>
+                </div>
+            </div>
+
+            <!-- Top Processes -->
+            <div id="processes-section" style="margin-top: 20px;">
+                <h3>Top Processes</h3>
+                <div id="processes-list">
+                    <p>--</p>
+                </div>
+            </div>
         </section>
 
     </main>
