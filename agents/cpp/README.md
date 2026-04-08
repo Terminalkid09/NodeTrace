@@ -1,4 +1,4 @@
-# NodeTrace C++ Agent placeholder
+# NodeTrace C++ Agent
 
 A high-performance C++ agent for the NodeTrace monitoring system. Designed for resource-constrained environments with minimal dependencies and efficient system monitoring.
 
