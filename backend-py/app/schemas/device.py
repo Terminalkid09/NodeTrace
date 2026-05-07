@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional, List
 from datetime import datetime
 
@@ -21,6 +21,8 @@ class Heartbeat(BaseModel):
     device_id: str
 
 class DeviceOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     device_id: str
     hostname: str
     os: str
@@ -28,10 +30,9 @@ class DeviceOut(BaseModel):
     last_seen: datetime
     status: str # on o off
 
-    class Config:
-        orm_mode = True # per leggere direttamente gli oggetti sqlalchemy
-
 class TelemetryOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     timestamp: datetime
     cpu_usage: float
     ram_usage: float
@@ -46,10 +47,9 @@ class TelemetryOut(BaseModel):
     network_received: Optional[int]
     active_connections: Optional[int]
 
-    class Config:
-        orm_mode = True
-
 class DeviceDetail(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     device_id: str
     hostname: str
     os: str
@@ -63,10 +63,9 @@ class DeviceDetail(BaseModel):
     telemetry_history: Optional[List[TelemetryOut]]
     active_alerts_count: int
 
-    class Config:
-        orm_mode = True
-
 class StatusOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     total: int
     online: int
     offline: int
