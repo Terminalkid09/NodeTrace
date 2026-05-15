@@ -745,6 +745,7 @@ site/
 
 # Agent configuration files (contain enrollment keys)
 config.json
+appsettings.json
 
 # Device tokens
 token.json
