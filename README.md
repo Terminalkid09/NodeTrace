@@ -2,11 +2,17 @@
 
 A comprehensive multi-agent device monitoring platform that collects detailed telemetry data from devices across various operating systems. Features real-time monitoring, alerting, and a RESTful API for device management.
 
+## 🚀 New Features
+
+- **🧠 Real-Time Statistical Anomaly Detection**: Uses a Z-Score engine to identify unusual resource spikes (CPU/RAM) based on historical data windows, going beyond simple static thresholds.
+- **🛠️ Unified Interactive Installer**: A single script to install, configure, and uninstall all 4 types of agents (Python, C++, C#, Java).
+- **📊 Dynamic Chart Highlighting**: Visual cues in the dashboard that glow and highlight data points flagged as anomalies.
+
 ## Features
 
 - **Multi-Agent Support**: Native agents for Windows, Linux, macOS in C#, Java, Python, C++
 - **Comprehensive Telemetry**: CPU usage, RAM usage, disk space, network statistics, active connections, running processes
-- **Real-Time Alerting**: Automatic alerts for high resource usage, low disk space, and network anomalies
+- **Real-Time Alerting**: Automatic alerts for high resource usage, low disk space, and **Statistical Anomalies**
 - **Device Management**: Secure device registration, heartbeat monitoring, online/offline status tracking
 - **Admin Dashboard API**: Complete RESTful API for device monitoring and alert management
 - **Security**: JWT authentication, per-device rate limiting, secure enrollment with keys
@@ -20,7 +26,7 @@ A comprehensive multi-agent device monitoring platform that collects detailed te
 │  (C#, Java,     │◄──►│  (FastAPI)      │
 │   Python, C++)  │    │                 │
 │                 │    │  ┌─────────────┐│
-│ • Telemetry     │    │  │ PostgreSQL  ││
+│ • Telemetry     │    │  │ Anomaly Eng ││
 │ • Heartbeats    │    │  └─────────────┘│
 │ • Auto Alerts   │    │                 │
 └─────────────────┘    │ • REST API      │
@@ -60,39 +66,12 @@ A comprehensive multi-agent device monitoring platform that collects detailed te
 
 3. The API will be available at http://localhost:8000
    - API Documentation: http://localhost:8000/docs
-   - Health Check: http://localhost:8000/health
+   - Health Check: http://localhost:8000/api/v1/health
 
 ### Running Agents
-
-#### Python Agent (Cross-platform)
+Use the **Unified Installer** for a guided setup:
 ```bash
-cd agents/python
-pip install requests psutil
-python agent.py
-```
-
-#### C# Agent (Windows)
-```bash
-cd agents/csharp/NodeTraceAgent
-dotnet build
-dotnet run
-```
-
-#### Java Agent (Cross-platform)
-```bash
-cd agents/java
-mvn clean compile
-java -cp target/classes com.nodetrace.Agent
-```
-
-#### C++ Agent (Cross-platform)
-- placeholder
-```bash
-cd agents/cpp
-mkdir build && cd build
-cmake ..
-make
-./agent
+.\install_agent.bat
 ```
 
 ## API Overview
@@ -103,57 +82,18 @@ make
 - Rate limiting applied per device/IP
 
 ### Key Endpoints
-- `POST /register` - Register new devices
-- `POST /update` - Submit telemetry data
-- `POST /heartbeat` - Device heartbeat
-- `GET /devices` - List all devices
-- `GET /devices/{id}` - Device details with alerts
-- `GET /alerts` - List all alerts
-- `PUT /alerts/{id}/resolve` - Resolve alerts
-
-### Alert Thresholds
-- CPU > 90% (Critical)
-- RAM > 95% (Critical)
-- Disk free < 1GB (Warning) / < 512MB (Critical)
-- Active connections > 100 (Warning)
-
-## Development
-
-### Backend Development
-```bash
-cd backend-py
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python -m uvicorn app.main:app --reload
-```
-
-### Testing
-```bash
-cd backend-py
-python -m pytest tests/
-```
-
-### Environment Variables
-- `DATABASE_URL`: PostgreSQL connection string
-- `SECRET_KEY`: JWT signing key
-- `ENROLL_KEY`: Device enrollment key
-- `SKIP_DB_CREATE`: Skip database table creation (for testing)
+- `POST /api/v1/register` - Register new devices
+- `POST /api/v1/update` - Submit telemetry data with Anomaly Detection
+- `POST /api/v1/heartbeat` - Device heartbeat
+- `GET /api/v1/devices` - List all devices
+- `GET /api/v1/alerts` - List all alerts (including Statistical Anomalies)
 
 ## Security
 
 - **Rate Limiting**: Per-device for agents, per-IP for admin
 - **Authentication**: JWT for admin, device tokens for agents
 - **Input Validation**: Pydantic schemas for all API inputs
-- **CORS**: Configured for frontend integration
+- **Anomaly Detection**: Statistical Z-Score analysis for behavioral security
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make changes with tests
-4. Submit a pull request
-
-## License
-
+## Author
 **Terminalkid09**
