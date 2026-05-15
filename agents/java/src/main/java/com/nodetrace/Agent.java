@@ -55,13 +55,21 @@ public class Agent {
     }
 
     private void loadConfig() {
-        try (FileReader reader = new FileReader("config.json")) {
-            config = gson.fromJson(reader, JsonObject.class);
-            Logger.info("Config loaded.");
-        } catch (Exception e) {
-            Logger.error("Failed to load config.json");
-            System.exit(1);
+        String[] paths = {"config.json", "agents/java/config.json", "target/config.json"};
+        for (String path : paths) {
+            java.io.File file = new java.io.File(path);
+            if (file.exists()) {
+                try (FileReader reader = new FileReader(file)) {
+                    config = gson.fromJson(reader, JsonObject.class);
+                    Logger.info("Config loaded from: " + path);
+                    return;
+                } catch (Exception e) {
+                    // Try next path
+                }
+            }
         }
+        Logger.error("Failed to load config.json from any known location.");
+        System.exit(1);
     }
 
     private JsonObject registerDevice() {

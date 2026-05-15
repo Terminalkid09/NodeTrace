@@ -1,6 +1,7 @@
 import json
 import time
 import requests
+import os
 
 from utils.logger import Logger
 from services.telemetry import TelemetryService
@@ -10,7 +11,11 @@ from services.retry_policy import retry
 
 class Agent:
     def __init__(self):
-        with open("config.json") as f:
+        config_path = "config.json"
+        if not os.path.exists(config_path):
+            config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
+            
+        with open(config_path) as f:
             self.config = json.load(f)
 
         self.telemetry = TelemetryService()

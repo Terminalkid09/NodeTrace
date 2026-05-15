@@ -4,6 +4,7 @@ namespace NodeTraceAgent.Models
     {
         public float CpuUsage { get; set; }
         public float RamUsage { get; set; }
+        public float AvailableRamMB { get; set; }
         public string? IpLocal { get; set; }
         public string? IpPublic { get; set; }
         public string? GeoCountry { get; set; }

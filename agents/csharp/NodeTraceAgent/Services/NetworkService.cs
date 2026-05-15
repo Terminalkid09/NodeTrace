@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.NetworkInformation;
+using NodeTraceAgent.Models;
 
 namespace NodeTraceAgent.Services
 {

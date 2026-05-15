@@ -2,7 +2,7 @@ using System.Text.Json;
 
 namespace NodeTraceAgent.Utils
 {
-    public class Config
+    public class ConfigData
     {
         public string DeviceName { get; set; } = "";
         public string RegisterUrl { get; set; } = "";
@@ -12,29 +12,56 @@ namespace NodeTraceAgent.Utils
         public int RetryMaxAttempts { get; set; }
         public int RetryBaseDelay { get; set; }
         public string EnrollKey { get; set; } = "";
+    }
+
+    public class Config
+    {
+        private readonly ConfigData _data;
+
+        public string DeviceName => _data.DeviceName;
+        public string RegisterUrl => _data.RegisterUrl;
+        public string UpdateUrl => _data.UpdateUrl;
+        public string HeartbeatUrl => _data.HeartbeatUrl;
+        public int HeartbeatInterval => _data.HeartbeatInterval;
+        public int RetryMaxAttempts => _data.RetryMaxAttempts;
+        public int RetryBaseDelay => _data.RetryBaseDelay;
+        public string EnrollKey => _data.EnrollKey;
 
         public Config()
         {
+            _data = new ConfigData();
             try
             {
-                var json = File.ReadAllText("config.json");
-                var cfg = JsonSerializer.Deserialize<Config>(json);
-
-                if (cfg != null)
+                string configPath = "config.json";
+                if (!File.Exists(configPath))
                 {
-                    DeviceName = cfg.DeviceName;
-                    RegisterUrl = cfg.RegisterUrl;
-                    UpdateUrl = cfg.UpdateUrl;
-                    HeartbeatUrl = cfg.HeartbeatUrl;
-                    HeartbeatInterval = cfg.HeartbeatInterval;
-                    RetryMaxAttempts = cfg.RetryMaxAttempts;
-                    RetryBaseDelay = cfg.RetryBaseDelay;
-                    EnrollKey = cfg.EnrollKey;
+                    string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                    configPath = Path.Combine(baseDir, "config.json");
+                }
+                
+                if (!File.Exists(configPath))
+                {
+                    configPath = "agents/csharp/NodeTraceAgent/config.json";
+                }
+
+                if (File.Exists(configPath))
+                {
+                    var json = File.ReadAllText(configPath);
+                    var cfg = JsonSerializer.Deserialize<ConfigData>(json);
+
+                    if (cfg != null)
+                    {
+                        _data = cfg;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("ERROR: config.json not found.");
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("ERROR: Failed to load config.json");
+                Console.WriteLine($"ERROR: Failed to load configuration: {ex.Message}");
             }
         }
     }

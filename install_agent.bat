@@ -3,6 +3,9 @@ setlocal enabledelayedexpansion
 title NodeTrace Agent Installer/Uninstaller
 color 0B
 
+:: Get the root directory of the script
+set ROOT_DIR=%~dp0
+
 echo =======================================================
 echo           NODETRACE UNIFIED AGENT TOOL
 echo =======================================================
@@ -40,32 +43,52 @@ if "%choice%"=="4" goto java_install
 
 :python_install
 echo [INFO] Configuring Python Agent...
-cd agents\python
+pushd "%ROOT_DIR%agents\python"
 echo BACKEND_URL=!backend_url! > .env
 echo ENROLL_KEY=!enroll_key! >> .env
-echo [SUCCESS] Python agent configured. Run 'python agent.py' to start.
+popd
+echo [SUCCESS] Python agent configured.
+echo To start the agent, run this command from the project root:
+echo python agents\python\agent.py
 goto end
 
 :cpp_install
 echo [INFO] Configuring C++ Agent...
-cd agents\cpp
+pushd "%ROOT_DIR%agents\cpp"
 echo {"backend_url": "!backend_url!", "enroll_key": "!enroll_key!"} > config.json
-echo [SUCCESS] C++ agent configured. Compile using CMake/Make.
+popd
+echo [SUCCESS] C++ agent configured. 
+echo To build, go to agents\cpp, then: mkdir build && cd build && cmake .. && make
 goto end
 
 :csharp_install
 echo [INFO] Configuring C# Agent...
-cd agents\csharp\NodeTraceAgent
-echo { "AgentConfig": { "BackendUrl": "!backend_url!", "EnrollKey": "!enroll_key!" } } > appsettings.json
-echo [SUCCESS] C# agent configured. Run 'dotnet run' to start.
+pushd "%ROOT_DIR%agents\csharp\NodeTraceAgent"
+echo { > config.json
+echo   "DeviceName": "%COMPUTERNAME%", >> config.json
+echo   "RegisterUrl": "!backend_url!/api/v1/register", >> config.json
+echo   "UpdateUrl": "!backend_url!/api/v1/update", >> config.json
+echo   "HeartbeatUrl": "!backend_url!/api/v1/heartbeat", >> config.json
+echo   "HeartbeatInterval": 10, >> config.json
+echo   "RetryMaxAttempts": 5, >> config.json
+echo   "RetryBaseDelay": 1, >> config.json
+echo   "EnrollKey": "!enroll_key!" >> config.json
+echo } >> config.json
+popd
+echo [SUCCESS] C# agent configured.
+echo To start the agent, run this command from the project root:
+echo dotnet run --project agents\csharp\NodeTraceAgent
 goto end
 
 :java_install
 echo [INFO] Configuring Java Agent...
-cd agents\java
+pushd "%ROOT_DIR%agents\java"
 echo backend.url=!backend_url! > agent.properties
 echo enroll.key=!enroll_key! >> agent.properties
-echo [SUCCESS] Java agent configured. Run 'mvn spring-boot:run' to start.
+popd
+echo [SUCCESS] Java agent configured.
+echo To start the agent, run this command from the project root:
+echo mvn spring-boot:run -f agents\java\pom.xml
 goto end
 
 :uninstall_menu
@@ -79,19 +102,19 @@ echo.
 set /p choice="Select agent to cleanup [1-4]: "
 
 if "%choice%"=="1" (
-    if exist agents\python\.env del agents\python\.env
+    if exist "%ROOT_DIR%agents\python\.env" del "%ROOT_DIR%agents\python\.env"
     echo [SUCCESS] Python agent config removed.
 )
 if "%choice%"=="2" (
-    if exist agents\cpp\config.json del agents\cpp\config.json
+    if exist "%ROOT_DIR%agents\cpp\config.json" del "%ROOT_DIR%agents\cpp\config.json"
     echo [SUCCESS] C++ agent config removed.
 )
 if "%choice%"=="3" (
-    if exist agents\csharp\NodeTraceAgent\appsettings.json del agents\csharp\NodeTraceAgent\appsettings.json
+    if exist "%ROOT_DIR%agents\csharp\NodeTraceAgent\config.json" del "%ROOT_DIR%agents\csharp\NodeTraceAgent\config.json"
     echo [SUCCESS] C# agent config removed.
 )
 if "%choice%"=="4" (
-    if exist agents\java\agent.properties del agents\java\agent.properties
+    if exist "%ROOT_DIR%agents\java\agent.properties" del "%ROOT_DIR%agents\java\agent.properties"
     echo [SUCCESS] Java agent config removed.
 )
 goto end
