@@ -238,6 +238,20 @@ def update_telemetry(
     db.add(entry)
     db.commit()
 
+    # Create alerts for anomalies
+    for anomaly in anomalies_found:
+        new_alert = Alert(
+            device_id=payload.device_id,
+            alert_type="statistical_anomaly",
+            severity="warning",
+            message=f"Statistical anomaly detected in {anomaly['metric']}: value {anomaly['value']} (Z-Score: {anomaly['z_score']:.2f})",
+            alert_value=float(anomaly['value'])
+        )
+        db.add(new_alert)
+    
+    if anomalies_found:
+        db.commit()
+
     # Check for alerts
     check_and_create_alerts(db, payload.device_id, payload)
 
