@@ -20,7 +20,9 @@ function initCharts() {
                 data: [],
                 borderColor: "red",
                 backgroundColor: "rgba(255, 0, 0, 0.1)",
-                tension: 0.2
+                tension: 0.2,
+                pointBackgroundColor: [],
+                pointRadius: []
             }]
         },
         options: {
@@ -40,7 +42,9 @@ function initCharts() {
                 data: [],
                 borderColor: "blue",
                 backgroundColor: "rgba(0, 0, 255, 0.1)",
-                tension: 0.2
+                tension: 0.2,
+                pointBackgroundColor: [],
+                pointRadius: []
             }]
         },
         options: {
@@ -107,26 +111,61 @@ async function loadTelemetry() {
     if (!selectedDevice) return;
 
     try {
-        const response = await fetch(`http://localhost:8000/telemetry/${selectedDevice}`);
-        const data = await response.json();
+        const response = await fetch(`http://localhost:8000/api/v1/telemetry/${selectedDevice}`);
+        const data_history = await response.json();
+        
+        if (!data_history || data_history.length === 0) return;
+        
+        // Use the latest data point for general cards
+        const data = data_history[data_history.length - 1];
+        const timestamp = new Date(data.timestamp).toLocaleTimeString();
 
-        const timestamp = new Date().toLocaleTimeString();
+        // Fetch latest alerts for anomaly highlighting
+        const alertResponse = await fetch(`http://localhost:8000/api/v1/alerts/${selectedDevice}`);
+        const alerts = await alertResponse.json();
+        
+        const latestAnomalies = alerts.filter(a => 
+            !a.resolved && 
+            a.alert_type === "statistical_anomaly" &&
+            (new Date() - new Date(a.timestamp)) < 15000 // Last 15 seconds
+        );
 
-        // CPU
+        const isCpuAnomaly = latestAnomalies.some(a => a.message.toLowerCase().includes("cpu_usage"));
+        const isRamAnomaly = latestAnomalies.some(a => a.message.toLowerCase().includes("ram_usage"));
+
+        // Update CPU Chart
         cpuChart.data.labels.push(timestamp);
         cpuChart.data.datasets[0].data.push(data.cpu_usage);
+        
+        if (!cpuChart.data.datasets[0].pointBackgroundColor) cpuChart.data.datasets[0].pointBackgroundColor = [];
+        if (!cpuChart.data.datasets[0].pointRadius) cpuChart.data.datasets[0].pointRadius = [];
+        
+        cpuChart.data.datasets[0].pointBackgroundColor.push(isCpuAnomaly ? "yellow" : "red");
+        cpuChart.data.datasets[0].pointRadius.push(isCpuAnomaly ? 8 : 3);
+
         if (cpuChart.data.labels.length > 20) {
             cpuChart.data.labels.shift();
             cpuChart.data.datasets[0].data.shift();
+            cpuChart.data.datasets[0].pointBackgroundColor.shift();
+            cpuChart.data.datasets[0].pointRadius.shift();
         }
         cpuChart.update();
 
-        // RAM
+        // Update RAM Chart
         ramChart.data.labels.push(timestamp);
         ramChart.data.datasets[0].data.push(data.ram_usage);
+        
+        if (!ramChart.data.datasets[0].pointBackgroundColor) ramChart.data.datasets[0].pointBackgroundColor = [];
+        if (!ramChart.data.datasets[0].pointRadius) ramChart.data.datasets[0].pointRadius = [];
+
+        ramChart.data.datasets[0].pointBackgroundColor.push(isRamAnomaly ? "yellow" : "blue");
+        ramChart.data.datasets[0].pointRadius.push(isRamAnomaly ? 8 : 3);
+
         if (ramChart.data.labels.length > 20) {
             ramChart.data.labels.shift();
             ramChart.data.datasets[0].data.shift();
+            ramChart.data.datasets[0].pointBackgroundColor.shift();
+            ramChart.data.datasets[0].pointRadius.shift();
         }
         ramChart.update();
 
@@ -160,9 +199,12 @@ async function loadTelemetry() {
         document.getElementById("active-connections").textContent = data.active_connections || "--";
 
         // Processes
-        if (data.processes && Array.isArray(data.processes)) {
-            const processList = document.getElementById("processes-list");
-            processList.innerHTML = data.processes.map(p => `<p>${p}</p>`).join("");
+        if (data.processes) {
+            const processes = typeof data.processes === 'string' ? JSON.parse(data.processes) : data.processes;
+            if (Array.isArray(processes)) {
+                const processList = document.getElementById("processes-list");
+                processList.innerHTML = processes.map(p => `<p>${p}</p>`).join("");
+            }
         }
 
     } catch (error) {
@@ -179,7 +221,7 @@ async function loadDeviceInfo() {
     }
 
     try {
-        const response = await fetch(`http://localhost:8000/devices/${selectedDevice}`);
+        const response = await fetch(`http://localhost:8000/api/v1/devices/${selectedDevice}`);
         const device = await response.json();
 
         document.getElementById("device-details").innerHTML = `
@@ -205,7 +247,7 @@ setInterval(loadTelemetry, 5000);
 
 async function loadDevices() {
     try {
-        const response = await fetch("http://localhost:8000/devices");
+        const response = await fetch("http://localhost:8000/api/v1/devices");
         const devices = await response.json();
 
         const table = document.getElementById("device-table");
@@ -254,7 +296,7 @@ setInterval(loadDevices, 5000);
 
 async function loadAlerts() {
     try {
-        const response = await fetch("http://localhost:8000/alerts");
+        const response = await fetch("http://localhost:8000/api/v1/alerts");
         const alerts = await response.json();
 
         const container = document.getElementById("alert-list");
@@ -272,12 +314,13 @@ async function loadAlerts() {
             const div = document.createElement("div");
             div.classList.add("alert-item");
 
-            if (alert.severity === "critical") div.classList.add("alert-critical");
+            if (alert.alert_type === "statistical_anomaly") div.classList.add("alert-warning");
+            else if (alert.severity === "critical") div.classList.add("alert-critical");
             else if (alert.severity === "warning") div.classList.add("alert-warning");
             else div.classList.add("alert-info");
 
             div.innerHTML = `
-                <p><strong>${(alert.severity || "info").toUpperCase()}</strong> — ${alert.message || "No message"}</p>
+                <p><strong>${(alert.alert_type === "statistical_anomaly" ? "ANOMALY" : alert.severity || "info").toUpperCase()}</strong> — ${alert.message || "No message"}</p>
                 <p><small>Device: ${alert.device_id} | ${alert.timestamp || "N/A"}</small></p>
             `;
 
@@ -295,7 +338,7 @@ setInterval(loadAlerts, 5000);
 
 async function loadStatus() {
     try {
-        const response = await fetch("http://localhost:8000/status");
+        const response = await fetch("http://localhost:8000/api/v1/status");
         const status = await response.json();
 
         document.getElementById("online-count").textContent = status.online || 0;
